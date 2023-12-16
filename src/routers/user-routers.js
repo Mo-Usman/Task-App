@@ -45,7 +45,7 @@ router.get('/users/:id', async (req, res) => {
 
 // Route handler for updating a user using uid
 router.patch('/users/:id', async (req, res) => {
-    const Updates = Object.keys(req.body) // Converts object into an array of properties
+    const Updates = Object.keys(req.body) // Converts object into an array of properties 
     const allowedUpdates = ['name', 'email','password', 'age'] // Updates that a  user can make
     const isValid = Updates.every((item) => allowedUpdates.includes(item))  //Returns true if items exist in
     //in the list using logical OR meaning all properties must exist in the list
