@@ -16,6 +16,18 @@ router.post('/users', async (req, res) => {
     }
 })
 
+// Route handler for logging in users
+router.post('/users/login', async (req, res) => {
+    const email = req.body.email
+    const password = req.body.password
+    try {
+        const user = await User.findByCredentials(email, password)
+        res.send(user)
+    } catch (e) {
+        res.status(400).send()
+    }
+})
+
 // Route handler for reading multiple users
 router.get('/users', async (req, res) => {
 
@@ -48,7 +60,7 @@ router.patch('/users/:id', async (req, res) => {
     const Updates = Object.keys(req.body) // Converts object into an array of properties
     const allowedUpdates = ['name', 'email','password', 'age'] // Updates that a  user can make
     const isValid = Updates.every((item) => allowedUpdates.includes(item))  //Returns true if items exist in
-    //in the list using logical OR meaning all properties must exist in the list
+    //in the list using logical AND meaning all properties must exist in the list
 
     if(!isValid) {
         return res.status(400).send({ error: 'Invalid Updates!' })
