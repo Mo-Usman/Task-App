@@ -4,6 +4,18 @@ const userRoute = require('./routers/user-routers')
 const taskRouter = require('./routers/task-router')
 
 const app = express()
+
+// Setting up express middleware for authentication
+// app.use((req, res, next) => {
+//     if(req.method === 'GET') {
+//         return res.send("GET method is disabled!")
+//     }
+//     next()
+// })
+// app.use((req, res, next) => {
+//     res.status(503).send('Site is currently under maintenance. Please try again soon.')
+// })
+
 app.use(express.json())
 app.use(userRoute)
 app.use(taskRouter)

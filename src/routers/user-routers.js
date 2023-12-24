@@ -1,5 +1,6 @@
 const express = require('express')
 const User = require('../models/user')
+const auth = require('../middleware/auth')
 
 const router = new express.Router()
 
@@ -31,14 +32,9 @@ router.post('/users/login', async (req, res) => {
 })
 
 // Route handler for reading multiple users
-router.get('/users', async (req, res) => {
-
-    try {
-        const users = await User.find({})
-        res.send(users)
-    } catch (e) {
-        res.status(500).send()
-    }
+router.get('/users/me', auth, async (req, res) => {
+    // Fething only the logged in user's profile (hiding other users' proiles)\
+    res.send(req.user)
 })
 
 // Route handler for reading a single user using uid
