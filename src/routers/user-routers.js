@@ -31,7 +31,7 @@ router.post('/users/login', async (req, res) => {
     }
 })
 
-// Route handler for reading multiple users
+// Route handler for reading profile
 router.get('/users/me', auth, async (req, res) => {
     // Fething only the logged in user's profile (hiding other users' proiles)\
     res.send(req.user)
@@ -97,6 +97,33 @@ router.delete('/users/:id', async (req, res) => {
     } catch (e) {
         res.status(500).send()
 }
+})
+
+// Route handler for logging out
+router.post('/users/logout', auth, async (req, res) => {
+    try {
+        // Filtering out the token used by the user from the tokens array
+        req.user.tokens = req.user.tokens.filter((token) => {
+            // Returns true if the token provided is not equl to the token inside the array
+            return token.token !== req.token
+        })
+
+        await req.user.save()
+        res.send()
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+
+// Route handler for logging out of all sessions
+router.post('/users/logoutALL', auth, async (req, res) => {
+    try {
+        req.user.tokens = []
+        await req.user.save()
+        res.send()
+    } catch (e) {
+        res.status(500).send()
+    }
 })
 
 module.exports = router
