@@ -67,6 +67,20 @@ userSchema.methods.generateAuthToken = async function () {
     return token
 }
 
+// Function to get public profile of user without password and tokens
+userSchema.methods.toJSON = function () {
+    const user = this
+
+    // Convert raw data into a user object
+    const userObject = user.toObject()
+
+    delete userObject.password
+    delete userObject.tokens
+
+    return userObject
+
+}
+
 // Function to log users in using email and password
 userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({email})
