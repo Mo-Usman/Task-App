@@ -5,17 +5,6 @@ const taskRouter = require('./routers/task-router')
 
 const app = express()
 
-// Setting up express middleware for authentication
-// app.use((req, res, next) => {
-//     if(req.method === 'GET') {
-//         return res.send("GET method is disabled!")
-//     }
-//     next()
-// })
-// app.use((req, res, next) => {
-//     res.status(503).send('Site is currently under maintenance. Please try again soon.')
-// })
-
 app.use(express.json())
 app.use(userRoute)
 app.use(taskRouter)
@@ -25,15 +14,17 @@ app.listen(3000, () => {
     console.log('Server is up on port 3000')
 })
 
+const Task = require('./models/task')
+const User = require('./models/user')
 
-// const jwt = require('jsonwebtoken')
+const main = async () => {
+    // const task = await Task.findById('658ad8574684447637906bd2')
+    // await task.populate('owner')
+    // console.log(task.owner)
 
-// const myFunction = async () => {
-//     const token = jwt.sign({ _id: 'abc123' }, 'thisistesttoken', { expiresIn: '7 days' })
-//     console.log(token)
+    const user = await User.findById('658ad5ef122c16a4449e0791')
+    await user.populate('tasks')
+    console.log(user.tasks)
+}
 
-//     const verfiriedToken = jwt.verify(token, 'thisistesttoken')
-//     console.log(verfiriedToken)
-// }
-
-// myFunction()
+main()

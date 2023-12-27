@@ -57,6 +57,18 @@ const userSchema = new mongoose.Schema({
     }]
 })
 
+
+
+// Setting up a virtual property for mongoose to figure out which task
+// is owned by which user
+userSchema.virtual('tasks', {
+    ref: 'Task',
+    localField: '_id', // Field where local data is stored with which the owner objectID will create a relationship
+    foreignField: 'owner' // Field in the Task model that creates relationship
+})
+
+
+
 // Function to return a token for a specific user
 userSchema.methods.generateAuthToken = async function () {
     const user = this
@@ -67,7 +79,7 @@ userSchema.methods.generateAuthToken = async function () {
     return token
 }
 
-// Function to get public profile of user without password and tokens
+// Function to get public profile of user without fetching password and tokens
 userSchema.methods.toJSON = function () {
     const user = this
 

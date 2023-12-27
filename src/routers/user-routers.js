@@ -80,7 +80,7 @@ router.post('/users/logout', auth, async (req, res) => {
     try {
         // Filtering out the token used by the user from the tokens array
         req.user.tokens = req.user.tokens.filter((token) => {
-            // Returns true if the token provided is not equl to the token inside the array
+            // Returns true if the token provided is not equal to the token inside the array
             return token.token !== req.token
         })
 
