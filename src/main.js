@@ -17,14 +17,14 @@ app.listen(3000, () => {
 const Task = require('./models/task')
 const User = require('./models/user')
 
-const main = async () => {
-    // const task = await Task.findById('658ad8574684447637906bd2')
-    // await task.populate('owner')
-    // console.log(task.owner)
+// const main = async () => {
+//     // const task = await Task.findById('658ad8574684447637906bd2')
+//     // await task.populate('owner')
+//     // console.log(task.owner)
 
-    const user = await User.findById('658ad5ef122c16a4449e0791')
-    await user.populate('tasks')
-    console.log(user.tasks)
-}
+//     const user = await User.findById('658ad5ef122c16a4449e0791')
+//     await user.populate('tasks')
+//     console.log(user.tasks)
+// }
 
-main()
+// main()
