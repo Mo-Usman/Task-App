@@ -5,6 +5,28 @@ const taskRouter = require('./routers/task-router')
 
 const app = express()
 
+
+const multer = require('multer')
+const upload = multer({
+    dest: 'images',
+    limits: {
+        fileSize: 1000000
+    },
+    fileFilter(req, file, cb) {
+        // Using regular expression instead of logical OR (another way of doing so)
+        if(!file.originalname.match(/\.(doc|docx)$/)) {
+            return cb(new Error('Please upload a word document'))
+        }
+        cb(undefined, true)
+    }
+})
+app.post('/upload', upload.single('upload'), (req, res) => {
+    res.send()
+}, (error, req, res, next) => {
+    res.status(400).send({ error: error.message })
+})
+
+
 app.use(express.json())
 app.use(userRoute)
 app.use(taskRouter)
@@ -13,18 +35,3 @@ app.use(taskRouter)
 app.listen(3000, () => {
     console.log('Server is up on port 3000')
 })
-
-const Task = require('./models/task')
-const User = require('./models/user')
-
-// const main = async () => {
-//     // const task = await Task.findById('658ad8574684447637906bd2')
-//     // await task.populate('owner')
-//     // console.log(task.owner)
-
-//     const user = await User.findById('658ad5ef122c16a4449e0791')
-//     await user.populate('tasks')
-//     console.log(user.tasks)
-// }
-
-// main()
