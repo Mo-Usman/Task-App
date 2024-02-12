@@ -1,6 +1,8 @@
 const express = require('express')
 const Task = require('../models/task')
 const auth = require('../middleware/auth')
+const multer = require('multer')
+const sharp = require('sharp')
 
 const router = new express.Router()
 
@@ -108,6 +110,51 @@ router.delete('/tasks/:id', auth, async (req, res) => {
     } catch (e) {
         res.status(500).send()
     }
+})
+
+// Function for uploading an image related to a task
+const upload = multer({
+    limits: {
+        fileSize: 1000000
+    }
+})
+
+// Route handler for uploading an image related to a task
+router.post('/tasks/:id/avatar', auth, upload.single('image'), async (req, res) => {
+    const _id = req.params.id
+    const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer()
+    const task = await Task.findById({ _id: _id ,owner: req.user._id })
+    if(!task) {
+        return res.status(404).send()
+    }
+    task.avatar = buffer
+    task.save()
+    res.send()
+}, (error, req, res, next) => {
+    res.status(400).send({ error: error.message })
+})
+
+// Route handler for fetching a task avatar using uid
+router.get('/tasks/:id/getAvatar', auth, async (req, res) => {
+    try {
+        const task = await Task.findById(req.params.id)
+        if(!task || !task.avatar) {
+            throw new Error()
+        }
+        res.set('Content-Type', 'image/png')
+        res.send(task.avatar)
+    } catch (e) {
+        res.status(404).send()
+    }
+})
+
+// Route handler for deleting a task avatar using uid
+router.delete('/tasks/:id/deleteAvatar', auth, async (req, res) => {
+    const _id = req.params.id
+    const task = await Task.findById({ _id: _id, owner: req.user._id })
+    task.avatar = undefined
+    task.save()
+    res.send()
 })
 
 module.exports = router
